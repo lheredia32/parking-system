@@ -1,0 +1,56 @@
+<div class="container mx-auto p-6">
+  <h1 class="text-4xl font-bold text-center text-blue-400 mb-8">
+    <i class="fa fa-car"></i> PARKING
+  </h1>
+
+  <div class="max-w-lg mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
+    <%= form_with model: Vehicle.new, url: vehicles_path, local: true, class: "space-y-4" do |form| %>
+      <div>
+        <%= form.label :plate_number, "Número de Placa:", class: "block text-sm font-medium text-blue-300" %>
+        <%= form.text_field :plate_number, required: true, class: "w-full mt-1 p-2 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
+      </div>
+      <div>
+        <%= form.submit "Registrar Entrada", class: "w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105" %>
+      </div>
+    <% end %>
+  </div>
+
+  <h2 class="text-2xl font-semibold text-center text-blue-300 mt-12 mb-6">Vehículos Registrados</h2>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-gray-800 text-gray-300 rounded-lg shadow-md overflow-hidden">
+      <thead class="bg-gray-700">
+        <tr>
+          <th class="px-4 py-2 text-left text-sm font-semibold tracking-wider">Placa</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold tracking-wider">Fecha</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold tracking-wider">Hora de Entrada</th>
+          <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Hora de Salida</th>
+          <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Acción</th>
+          <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Tiempo Total</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-700">
+        <% @vehicles.each do |vehicle| %>
+          <tr class="hover:bg-gray-700 transition">
+            <td class="px-4 py-2"><%= vehicle.plate_number %></td>
+            <td class="px-4 py-2"><%= Time.zone.now.strftime("%Y-%m-%d") %></td>
+            <td class="px-4 py-2"><%= vehicle.entry_time.strftime("%I:%M %p") %></td>
+            <td class="px-4 py-2 text-center">
+              <% if vehicle.exit_time %>
+                <%= vehicle.exit_time.strftime("%I:%M %p") %>
+              <% else %>
+                <span class="bg-yellow-500 text-white font-bold py-1 px-3 rounded-lg">En parqueadero</span>
+              <% end %>
+            </td>
+            <td class="px-4 py-2 text-center">
+              <% if vehicle.exit_time.nil? %>
+                <%= button_to "Registrar Salida", exit_vehicle_path(vehicle), method: :patch, class: "bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg transition transform hover:scale-105" %>
+              <% end %>
+            </td>
+            <td class="px-4 py-2 text-center"><%= vehicle.total_time %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

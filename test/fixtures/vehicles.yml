@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  plate_number: MyString
+  entry_time: 2024-12-04 16:32:10
+  exit_time: 2024-12-04 16:32:10
+
+two:
+  plate_number: MyString
+  entry_time: 2024-12-04 16:32:10
+  exit_time: 2024-12-04 16:32:10
