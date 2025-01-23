@@ -1,0 +1,26 @@
+<turbo-frame id="search-results-frame">
+  <% if search_results.present? %>
+    <table class="min-w-full bg-gray-800 rounded-lg mt-8">
+      <thead>
+        <tr>
+          <th class="px-4 py-2 text-center text-white">#</th>
+          <th class="px-4 py-2 text-center text-white">Placa</th>
+          <th class="px-4 py-2 text-center text-white">Entrada</th>
+          <th class="px-4 py-2 text-center text-white">Salida</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-700">
+        <% search_results.each_with_index do |vehicle, index| %>
+          <tr class="hover:bg-gray-700 transition">
+            <td class="px-4 py-2 text-center"><%= index + 1 %></td>
+            <td class="px-4 py-2 text-center"><%= vehicle.plate_number.upcase %></td>
+            <td class="px-4 py-2 text-center"><%= vehicle.entry_time&.strftime("%Y-%m-%d %I:%M %p") || "N/A" %></td>
+            <td class="px-4 py-2 text-center"><%= vehicle.exit_time&.strftime("%Y-%m-%d %I:%M %p") || "En Parqueadero" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="text-gray-400 text-center mt-4">No se encontraron resultados para la búsqueda.</p>
+  <% end %>
+</turbo-frame>
