@@ -3,9 +3,11 @@
     <i class="fa fa-car"></i> PARKING
   </h1>
 
-  <div class="flex justify-center space-x-8">
+  <div class="flex justify-center space-x-8 mb-8">
     <!-- Formulario de registro de vehículo -->
-    <div class="max-w-lg bg-gray-800 p-6 rounded-lg shadow-lg">
+    <div class="w-1/3 bg-gray-800 p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold text-center text-blue-300 mb-4">Registro de Ingreso</h2>
+
       <%= form_with model: Vehicle.new, url: vehicles_path, local: true, class: "space-y-4" do |form| %>
         <div>
           <%= form.label :plate_number, "Número de Placa:", class: "block text-sm font-medium text-blue-300" %>
@@ -15,14 +17,14 @@
           <%= form.label :vehicle_type, "Tipo de Vehículo:", class: "block text-sm font-medium text-blue-300" %>
           <%= form.select :vehicle_type, Vehicle.vehicle_types.keys.map { |type| [type.humanize, type] }, { prompt: 'Seleccione el tipo de vehículo' }, class: "w-full mt-1 p-2 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
         </div>
-        <div>
-          <%= form.submit "Registrar Entrada", class: "w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105" %>
+        <div class="flex justify-center">
+          <%= form.submit "Registrar", class: "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105" %>
         </div>
       <% end %>
     </div>
 
     <!-- Tabla de tarifas -->
-    <div class="max-w-sm bg-gray-800 p-6 rounded-lg shadow-lg">
+    <div class="w-1/3 bg-gray-800 p-6 rounded-lg shadow-lg">
       <h2 class="text-2xl font-semibold text-center text-blue-300 mb-4">Tarifas</h2>
       <table class="min-w-full bg-gray-700 text-gray-300 rounded-lg shadow-md overflow-hidden">
         <thead class="bg-gray-600">
@@ -34,11 +36,11 @@
         <tbody class="divide-y divide-gray-600">
           <tr>
             <td class="px-4 py-2">Motocicleta</td>
-            <td class="px-4 py-2">$3500/hora</td>
+            <td class="px-4 py-2">$3500/hora o fracción</td>
           </tr>
           <tr>
             <td class="px-4 py-2">Carro</td>
-            <td class="px-4 py-2">$5000/hora</td>
+            <td class="px-4 py-2">$5000/hora o fracción</td>
           </tr>
           <tr>
             <td class="px-4 py-2">Bicicleta</td>
@@ -47,48 +49,112 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Cuadro de botones -->
+    <div class="w-1/3 bg-gray-800 p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold text-center text-blue-300 mb-4">Acciones</h2>
+      <div class="flex flex-col items-center space-y-4">
+        <button
+          type="button"
+          class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105 w-48"
+          onclick="toggleModal('search-modal')">
+          Buscar por Placa
+        </button>
+        <%= link_to "Ver Registros", vehicles_path, class: "text-center bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105 w-48" %>
+        <%= link_to "Ajustes", vehicles_path, class: "text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105 w-48" %>
+      </div>
+    </div>
   </div>
 
-  <h2 class="text-2xl font-semibold text-center text-blue-300 mt-12 mb-6">Vehículos Registrados</h2>
-
-  <div class="overflow-x-auto">
-    <table class="min-w-full bg-gray-800 text-gray-300 rounded-lg shadow-md overflow-hidden">
-      <thead class="bg-gray-700">
-        <tr>
-          <th class="px-4 py-2 text-left text-sm font-semibold tracking-wider">Placa</th>
-          <th class="px-4 py-2 text-left text-sm font-semibold tracking-wider">Tipo de Vehículo</th>
-          <th class="px-4 py-2 text-left text-sm font-semibold tracking-wider">Fecha</th>
-          <th class="px-4 py-2 text-left text-sm font-semibold tracking-wider">Hora de Entrada</th>
-          <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Hora de Salida</th>
-          <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Acción</th>
-          <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Tiempo Total</th>
-          <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Costo</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-700">
-        <% @vehicles.each do |vehicle| %>
-          <tr class="hover:bg-gray-700 transition">
-            <td class="px-4 py-2"><%= vehicle.plate_number %></td>
-            <td class="px-4 py-2"><%= vehicle.vehicle_type %></td>
-            <td class="px-4 py-2"><%= vehicle.entry_time.strftime("%Y-%m-%d") %></td>
-            <td class="px-4 py-2"><%= vehicle.entry_time.strftime("%I:%M %p") %></td>
-            <td class="px-4 py-2 text-center">
-              <% if vehicle.exit_time %>
-                <%= vehicle.exit_time.strftime("%I:%M %p") %>
-              <% else %>
-                <span class="bg-yellow-500 text-white font-bold py-1 px-3 rounded-lg">En parqueadero</span>
-              <% end %>
-            </td>
-            <td class="px-4 py-2 text-center">
-              <% if vehicle.exit_time.nil? %>
-                <%= button_to "Registrar Salida", exit_vehicle_path(vehicle), method: :patch, class: "bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg transition transform hover:scale-105" %>
-              <% end %>
-            </td>
-            <td class="px-4 py-2 text-center"><%= vehicle.total_time %></td>
-            <td class="px-4 py-2 text-center"><%= number_to_currency(vehicle.total_cost, unit: "$") %></td>
+  <!-- Tabla de vehículos en parqueadero -->
+  <div class="mt-8">
+    <h2 class="text-2xl font-semibold text-center text-blue-300 mb-4">Vehículos en Parqueadero</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-gray-800 text-gray-300 rounded-lg shadow-md overflow-hidden">
+        <thead class="bg-gray-700">
+          <tr>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">#</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Placa</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Tipo de Vehículo</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Fecha</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Hora de Entrada</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Acciones</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody class="divide-y divide-gray-700">
+          <% @vehicles_in_parking.each_with_index do |vehicle, index| %>
+            <tr class="hover:bg-gray-700 transition">
+              <td class="px-4 py-2 text-center"><%= index + 1 %></td>
+              <td class="px-4 py-2 text-center"><%= vehicle.plate_number.upcase %></td>
+              <td class="px-4 py-2 text-center"><%= vehicle.vehicle_type %></td>
+              <td class="px-4 py-2 text-center"><%= vehicle.entry_time.strftime("%Y-%m-%d") %></td>
+              <td class="px-4 py-2 text-center"><%= vehicle.entry_time.strftime("%I:%M %p") %></td>
+              <td class="px-4 py-2 text-center">
+                <%= button_to "Registrar Salida", exit_vehicle_path(vehicle), method: :patch, class: "bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg transition transform hover:scale-105" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tabla de últimos 5 registros de salida -->
+  <div class="mb-8 mt-8">
+    <h2 class="text-2xl font-semibold text-center text-blue-300 mb-4">Últimos Registros de Salida</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-gray-800 text-gray-300 rounded-lg shadow-md overflow-hidden">
+        <thead class="bg-gray-700">
+          <tr>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">#</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Placa</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Tipo de Vehículo</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Fecha</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Hora de Entrada</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Hora de Salida</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Tiempo Total</th>
+            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Costo</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-700">
+          <% @recent_exits.each_with_index do |vehicle, index| %>
+            <tr class="hover:bg-gray-700 transition">
+              <td class="px-4 py-2 text-center"><%= index + 1 %></td>
+              <td class="px-4 py-2 text-center"><%= vehicle.plate_number.upcase %></td>
+              <td class="px-4 py-2 text-center"><%= vehicle.vehicle_type %></td>
+              <td class="px-4 py-2 text-center"><%= vehicle.entry_time.strftime("%Y-%m-%d") %></td>
+              <td class="px-4 py-2 text-center"><%= vehicle.entry_time.strftime("%I:%M %p") %></td>
+              <td class="px-4 py-2 text-center"><%= vehicle.exit_time.strftime("%I:%M %p") %></td>
+              <td class="px-4 py-2 text-center"><%= vehicle.total_time %></td>
+              <td class="px-4 py-2 text-center"><%= number_to_currency(vehicle.total_cost, unit: "$", precision: 0) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de búsqueda por placa -->
+<div id="search-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 items-center flex justify-center hidden">
+  <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-1/3">
+    <h2 class="text-2xl font-semibold text-center text-blue-300 mb-4">Buscar por Placa</h2>
+    <%= form_with url: search_vehicles_path, method: :get, data: { turbo_frame: "search-results-frame" }, class: "space-y-4" do |form| %>
+      <div>
+        <%= form.label :plate_number, "Número de Placa:", class: "block text-sm font-medium text-blue-300" %>
+        <%= form.text_field :plate_number, required: true, placeholder: "Ingresa el número de placa", class: "w-full mt-1 p-2 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
+      </div>
+      <div class="flex justify-center space-x-4">
+        <%= form.submit "Buscar", class: "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105" %>
+        <button type="button" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105" onclick="toggleModal('search-modal')">
+          Cerrar
+        </button>
+      </div>
+    <% end %>
+    <!-- Turbo Frame para los resultados -->
+    <turbo-frame id="search-results-frame">
+      <!-- Los resultados aparecerán aquí dinámicamente -->
+      <p class="text-gray-400 text-center mt-4">Ingresa una placa para buscar resultados.</p>
+    </turbo-frame>
   </div>
 </div>

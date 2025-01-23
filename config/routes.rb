@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  root 'vehicles#index'
-  resources :vehicles, only: %i[index create] do
+  resources :vehicles do
+    collection do
+      get 'search', to: 'vehicles#search'
+      get :all_records
+    end
     member do
       patch :exit
     end
   end
+  root 'vehicles#index'
 end

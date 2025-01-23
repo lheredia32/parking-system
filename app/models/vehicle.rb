@@ -18,7 +18,7 @@ class Vehicle < ApplicationRecord
   def total_time_in_hours
     return 0 unless exit_time
 
-    ((exit_time - entry_time) / 1.hour).round(2)
+    ((exit_time - entry_time) / 1.hour.to_f).ceil
   end
 
   def total_cost
@@ -36,7 +36,6 @@ class Vehicle < ApplicationRecord
     when 'Carro'
       total_time_in_hours * 5000
     when 'Bicicleta'
-      # Para bicicletas, asumimos que el costo es por día completo
       total_time_in_hours.positive? ? 2500 : 0
     else
       0
