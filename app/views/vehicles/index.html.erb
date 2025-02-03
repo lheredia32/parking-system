@@ -8,7 +8,7 @@
     <div class="w-1/3 bg-gray-800 p-6 rounded-lg shadow-lg">
       <h2 class="text-2xl font-semibold text-center text-blue-300 mb-4">Registro de Ingreso</h2>
 
-      <%= form_with model: Vehicle.new, url: vehicles_path, local: true, class: "space-y-4" do |form| %>
+      <%= form_with model: Vehicle.new, url: vehicles_path, local: true, class: "space-y-4", data: { turbo_frame: "vehicles-frame" } do |form| %>
         <div>
           <%= form.label :plate_number, "Número de Placa:", class: "block text-sm font-medium text-blue-300" %>
           <%= form.text_field :plate_number, required: true, class: "w-full mt-1 p-2 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
@@ -58,10 +58,14 @@
           type="button"
           class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105 w-48"
           onclick="toggleModal('search-modal')">
-          Buscar por Placa
+          <i class="fa fa-search"></i> Buscar por Placa
         </button>
-        <%= link_to "Ver Registros", vehicles_path, class: "text-center bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105 w-48" %>
-        <%= link_to "Ajustes", vehicles_path, class: "text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105 w-48" %>
+        <%= link_to all_records_vehicles_path, class: "text-center bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105 w-48" do %>
+          <i class="fa fa-list"></i> Ver Registros
+        <% end %>
+        <%= link_to vehicles_path, class: "text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105 w-48" do %>
+          <i class="fa fa-cogs"></i> Ajustes
+        <% end %>
       </div>
     </div>
   </div>
@@ -70,32 +74,36 @@
   <div class="mt-8">
     <h2 class="text-2xl font-semibold text-center text-blue-300 mb-4">Vehículos en Parqueadero</h2>
     <div class="overflow-x-auto">
-      <table class="min-w-full bg-gray-800 text-gray-300 rounded-lg shadow-md overflow-hidden">
-        <thead class="bg-gray-700">
-          <tr>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">#</th>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Placa</th>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Tipo de Vehículo</th>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Fecha</th>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Hora de Entrada</th>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Acciones</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-700">
-          <% @vehicles_in_parking.each_with_index do |vehicle, index| %>
-            <tr class="hover:bg-gray-700 transition">
-              <td class="px-4 py-2 text-center"><%= index + 1 %></td>
-              <td class="px-4 py-2 text-center"><%= vehicle.plate_number.upcase %></td>
-              <td class="px-4 py-2 text-center"><%= vehicle.vehicle_type %></td>
-              <td class="px-4 py-2 text-center"><%= vehicle.entry_time.strftime("%Y-%m-%d") %></td>
-              <td class="px-4 py-2 text-center"><%= vehicle.entry_time.strftime("%I:%M %p") %></td>
-              <td class="px-4 py-2 text-center">
-                <%= button_to "Registrar Salida", exit_vehicle_path(vehicle), method: :patch, class: "bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg transition transform hover:scale-105" %>
-              </td>
+      <turbo-frame id="vehicles-frame">
+        <table class="min-w-full bg-gray-800 text-gray-300 rounded-lg shadow-md overflow-hidden">
+          <thead class="bg-gray-700">
+            <tr>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">#</th>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Placa</th>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Tipo de Vehículo</th>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Fecha</th>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Hora de Entrada</th>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Acciones</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="divide-y divide-gray-700">
+            <% @vehicles_in_parking.each_with_index do |vehicle, index| %>
+              <tr class="hover:bg-gray-700 transition">
+                <td class="px-4 py-2 text-center"><%= index + 1 %></td>
+                <td class="px-4 py-2 text-center"><%= vehicle.plate_number.upcase %></td>
+                <td class="px-4 py-2 text-center"><%= vehicle.vehicle_type %></td>
+                <td class="px-4 py-2 text-center"><%= vehicle.entry_time.strftime("%Y-%m-%d") %></td>
+                <td class="px-4 py-2 text-center"><%= vehicle.entry_time.strftime("%I:%M %p") %></td>
+                <td class="px-4 py-2 text-center">
+                  <%= button_to exit_vehicle_path(vehicle), method: :patch, class: "bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg transition transform hover:scale-105" do %>
+                    <i class="fa fa-sign-out-alt"></i> Registrar Salida
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </turbo-frame>
     </div>
   </div>
 
@@ -103,34 +111,36 @@
   <div class="mb-8 mt-8">
     <h2 class="text-2xl font-semibold text-center text-blue-300 mb-4">Últimos Registros de Salida</h2>
     <div class="overflow-x-auto">
-      <table class="min-w-full bg-gray-800 text-gray-300 rounded-lg shadow-md overflow-hidden">
-        <thead class="bg-gray-700">
-          <tr>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">#</th>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Placa</th>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Tipo de Vehículo</th>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Fecha</th>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Hora de Entrada</th>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Hora de Salida</th>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Tiempo Total</th>
-            <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Costo</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-700">
-          <% @recent_exits.each_with_index do |vehicle, index| %>
-            <tr class="hover:bg-gray-700 transition">
-              <td class="px-4 py-2 text-center"><%= index + 1 %></td>
-              <td class="px-4 py-2 text-center"><%= vehicle.plate_number.upcase %></td>
-              <td class="px-4 py-2 text-center"><%= vehicle.vehicle_type %></td>
-              <td class="px-4 py-2 text-center"><%= vehicle.entry_time.strftime("%Y-%m-%d") %></td>
-              <td class="px-4 py-2 text-center"><%= vehicle.entry_time.strftime("%I:%M %p") %></td>
-              <td class="px-4 py-2 text-center"><%= vehicle.exit_time.strftime("%I:%M %p") %></td>
-              <td class="px-4 py-2 text-center"><%= vehicle.total_time %></td>
-              <td class="px-4 py-2 text-center"><%= number_to_currency(vehicle.total_cost, unit: "$", precision: 0) %></td>
+      <turbo-frame id="recent-exits-frame">
+        <table class="min-w-full bg-gray-800 text-gray-300 rounded-lg shadow-md overflow-hidden">
+          <thead class="bg-gray-700">
+            <tr>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">#</th>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Placa</th>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Tipo de Vehículo</th>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Fecha</th>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Hora de Entrada</th>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Hora de Salida</th>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Tiempo Total</th>
+              <th class="px-4 py-2 text-center text-sm font-semibold tracking-wider">Costo</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="divide-y divide-gray-700">
+            <% @recent_exits.each_with_index do |vehicle, index| %>
+              <tr class="hover:bg-gray-700 transition">
+                <td class="px-4 py-2 text-center"><%= index + 1 %></td>
+                <td class="px-4 py-2 text-center"><%= vehicle.plate_number.upcase %></td>
+                <td class="px-4 py-2 text-center"><%= vehicle.vehicle_type %></td>
+                <td class="px-4 py-2 text-center"><%= vehicle.entry_time.strftime("%Y-%m-%d") %></td>
+                <td class="px-4 py-2 text-center"><%= vehicle.entry_time.strftime("%I:%M %p") %></td>
+                <td class="px-4 py-2 text-center"><%= vehicle.exit_time.strftime("%I:%M %p") %></td>
+                <td class="px-4 py-2 text-center"><%= vehicle.total_time %></td>
+                <td class="px-4 py-2 text-center"><%= number_to_currency(vehicle.total_cost, unit: "$", precision: 0) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </turbo-frame>
     </div>
   </div>
 </div>
