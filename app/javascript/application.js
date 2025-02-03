@@ -27,3 +27,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.toggleModal = toggleModal; // Exportar la función para usarla en HTML
 });
+import "@hotwired/turbo-rails"

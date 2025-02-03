@@ -43,6 +43,16 @@ class VehiclesController < ApplicationController
     end
   end
 
+  def all_records
+    @vehicles = if params[:search].present?
+                  Vehicle.where('plate_number LIKE ? OR vehicle_type LIKE ?',
+                                "%#{params[:search]}%", "%#{params[:search]}%")
+                         .order(created_at: :desc)
+                else
+                  Vehicle.all.order(created_at: :desc)
+                end
+  end
+
   private
 
   def set_common_variables
