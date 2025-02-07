@@ -1,0 +1,69 @@
+<div class="w-1/3 bg-gray-800 p-6 rounded-lg shadow-lg">
+  <div class="max-w-md w-full bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-700 text-center space-y-6">
+    
+    <% if alert = flash[:alert] %>
+      <p class="py-2 px-4 bg-red-500 text-white font-medium rounded-md text-center animate-pulse" id="alert"><%= alert %></p>
+    <% end %>
+
+    <% if notice = flash[:notice] %>
+      <p class="py-2 px-4 bg-green-500 text-white font-medium rounded-md text-center animate-pulse" id="notice"><%= notice %></p>
+    <% end %>
+
+    <!-- Título con ícono -->
+    <h1 class="text-4xl font-bold text-center text-blue-400 mb-8">
+      <i class="fa fa-user-plus text-4xl"></i> Registrarse
+    </h1>
+    <p class="text-gray-400 text-sm">Crea tu cuenta para comenzar a gestionar tu parqueadero.</p>
+
+    <%= form_with url: registrations_path, model: @user, method: :post, class: "space-y-4" do |form| %>
+      <div class="space-y-4">
+        <%= form.email_field :email_address, 
+          required: true, 
+          autofocus: true, 
+          autocomplete: "username", 
+          placeholder: "Correo Electrónico", 
+          value: params[:email_address], 
+          class: "w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" %>
+
+        <%= form.password_field :password, 
+          required: true, 
+          autocomplete: "new-password", 
+          placeholder: "Contraseña", 
+          maxlength: 72, 
+          class: "w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" %>
+
+        <%= form.password_field :password_confirmation, 
+          required: true, 
+          autocomplete: "new-password", 
+          placeholder: "Confirmar Contraseña", 
+          maxlength: 72, 
+          class: "w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" %>
+      </div>
+
+      <%= form.fields_for :profile do |profile_form| %>
+        <div>
+          <%= profile_form.label :name, "Nombre:", class: "block text-sm font-medium text-blue-300" %>
+          <%= profile_form.text_field :name, required: true, class: "w-full mt-1 p-2 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
+        </div>
+        <div>
+          <%= profile_form.label :last_name, "Apellido:", class: "block text-sm font-medium text-blue-300" %>
+          <%= profile_form.text_field :last_name, required: true, class: "w-full mt-1 p-2 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
+        </div>
+        <div>
+          <%= profile_form.label :phone_number, "Teléfono:", class: "block text-sm font-medium text-blue-300" %>
+          <%= profile_form.text_field :phone_number, required: true, class: "w-full mt-1 p-2 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
+        </div>
+      <% end %>
+
+      <div class="flex justify-center">
+        <%= form.submit "Registrarse", 
+          class: "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105" %>
+      </div>
+
+      <div class="text-center mt-4">
+        <%= link_to "Click aquí, si ya tienes una cuenta", new_session_path, 
+          class: "text-sm text-gray-400 hover:text-blue-300 transition underline" %>
+      </div>
+    <% end %>
+  </div>
+</div>
