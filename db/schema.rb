@@ -10,7 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_21_162715) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_06_202026) do
+  create_table "profiles", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "last_name"
+    t.string "phone_number"
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
+  create_table "sessions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email_address", null: false
+    t.string "password_digest", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "profile_id"
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["profile_id"], name: "index_users_on_profile_id"
+  end
+
   create_table "vehicles", force: :cascade do |t|
     t.string "plate_number"
     t.datetime "entry_time"
@@ -18,5 +47,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_21_162715) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "vehicle_type", default: 0
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_vehicles_on_user_id"
   end
+
+  add_foreign_key "profiles", "users"
+  add_foreign_key "sessions", "users"
+  add_foreign_key "vehicles", "users"
 end

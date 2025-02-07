@@ -3,6 +3,10 @@
 # ...
 class Vehicle < ApplicationRecord
   enum :vehicle_type, { Motocicleta: 0, Carro: 1, Bicicleta: 2 }
+  belongs_to :user
+
+  validates :plate_number, presence: true
+  validates :vehicle_type, presence: true
 
   def total_time
     return '-' unless exit_time

@@ -1,11 +1,16 @@
 <div class="container mx-auto p-6">
-  <h1 class="text-4xl font-bold text-center text-blue-400 mb-8">
+  <h1 class="text-4xl font-bold text-center text-blue-400">
     <i class="fa fa-car"></i> PARKING
   </h1>
+
+  <p class="text-center text-blue-400 mb-8">
+    <span class="text-white">Usuario:</span> <%= Current.user.email_address if Current.user %>
+  </p>
+
   <div class="w-full bg-gray-800 p-6 rounded-lg shadow-lg">
     <!-- Formulario de búsqueda y botón "Volver" -->
     <div class="mb-6">
-      <%= form_with url: all_records_vehicles_path, method: :get, local: true, class: "flex justify-between items-center space-x-4" do |form| %>
+      <%= form_with url: records_by_user_vehicles_path, method: :get, local: true, class: "flex justify-between items-center space-x-4" do |form| %>
         <div class="flex items-center space-x-4">
           <%= form.text_field :search, value: params[:search], placeholder: "Buscar por placa", class: "w-64 p-2 rounded-md bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
           <%= form.submit "Buscar", class: "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105" %>
@@ -54,4 +59,7 @@
       <p class="text-gray-400 text-center mt-4">No se encontraron registros para la búsqueda "<%= params[:search] %>".</p>
     <% end %>
   </div>
+  <footer class="text-xs text-white text-center py-2 mt-8">
+    &lt;/&gt; by Heredium
+  </footer>
 </div>
