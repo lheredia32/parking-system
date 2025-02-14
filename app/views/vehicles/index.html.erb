@@ -4,7 +4,8 @@
   </h1>
 
   <p class="text-center text-blue-400 mb-8">
-    <span class="text-white">Usuario:</span> <%= Current.user.email_address if Current.user %>
+    <span class="text-white">Usuario:</span>
+    <%= link_to(Current.user.email_address, profile_path) if Current.user %>
   </p>
 
   <div class="flex justify-center space-x-8 mb-8">
@@ -12,7 +13,7 @@
     <div class="w-1/3 bg-gray-800 p-6 rounded-lg shadow-lg">
       <h2 class="text-2xl font-semibold text-center text-blue-300 mb-4">Registro de Ingreso</h2>
 
-      <%= form_with model: Vehicle.new, url: vehicles_path, local: true, class: "space-y-4", data: { turbo_frame: "vehicles-frame" } do |form| %>
+      <%= form_with model: Vehicle.new, url: vehicles_path, local: true, class: "space-y-4", data: { turbo_frame: "vehicles-frame" }, id: "vehicle-form" do |form| %>
         <div>
           <%= form.label :plate_number, "Número de Placa:", class: "block text-sm font-medium text-blue-300" %>
           <%= form.text_field :plate_number, required: true, class: "w-full mt-1 p-2 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
@@ -118,7 +119,7 @@
   <div class="mb-8 mt-8">
     <h2 class="text-2xl font-semibold text-center text-blue-300 mb-4">Últimos Registros de Salida</h2>
     <div class="overflow-x-auto">
-      <turbo-frame id="recent-exits-frame">
+      <turbo-frame id="recent-exits-frame"> <!-- Revisar logica, está incompleto, la idea es que refresque los registros de salida. --> 
         <table class="min-w-full bg-gray-800 text-gray-300 rounded-lg shadow-md overflow-hidden">
           <thead class="bg-gray-700">
             <tr>
@@ -170,6 +171,7 @@
         </button>
       </div>
     <% end %>
+    
     <!-- Turbo Frame para los resultados -->
     <turbo-frame id="search-results-frame">
       <!-- Los resultados aparecerán aquí dinámicamente -->

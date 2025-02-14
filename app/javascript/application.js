@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById(modalId);
     if (modal.classList.contains("hidden")) {
       modal.classList.remove("hidden");
+      searchField.focus();
     } else {
       modal.classList.add("hidden");
     }
@@ -27,4 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.toggleModal = toggleModal; // Exportar la función para usarla en HTML
 });
-import "@hotwired/turbo-rails"
+
+document.addEventListener("turbo:submit-end", function (event) {
+  if (event.target.id === "vehicle-form") {
+    event.target.reset();
+  }
+});

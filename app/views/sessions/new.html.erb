@@ -1,5 +1,5 @@
 <div class="w-1/3 bg-gray-800 p-6 rounded-lg shadow-lg">
-  <div class="max-w-md w-full bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-700 text-center space-y-6">
+  <div class="max-w-full bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-700 text-center space-y-6">
     
     <% if alert = flash[:alert] %>
       <p class="py-2 px-4 bg-red-500 text-white font-medium rounded-md text-center animate-pulse" id="alert"><%= alert %></p>
@@ -38,8 +38,7 @@
       </div>
 
       <div class="text-center mt-4">
-        <%= link_to "¿Olvidaste tu contraseña?", new_password_path, 
-          class: "text-sm text-gray-400 hover:text-blue-300 transition underline" %>
+        <%= link_to "¿Olvidaste tu contraseña?", new_password_path, class: "text-sm text-gray-400 hover:text-blue-300 transition underline" %> ó <%= link_to "Regístrate por primera vez", new_registrations_path, class: "text-sm text-gray-400 hover:text-blue-300 transition underline" %>
       </div>
     <% end %>
   </div>
