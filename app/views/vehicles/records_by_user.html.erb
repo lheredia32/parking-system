@@ -4,7 +4,8 @@
   </h1>
 
   <p class="text-center text-blue-400 mb-8">
-    <span class="text-white">Usuario:</span> <%= Current.user.email_address if Current.user %>
+    <span class="text-white">Usuario:</span>
+    <%= link_to(Current.user.email_address, profile_path) if Current.user %>
   </p>
 
   <div class="w-full bg-gray-800 p-6 rounded-lg shadow-lg">
