@@ -21,6 +21,6 @@ module ParkingSystem
     config.time_zone = 'Bogota'
     config.i18n.default_locale = :en
     # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
+    config.eager_load_paths << Rails.root.join("app/services")
   end
 end

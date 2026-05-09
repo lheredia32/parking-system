@@ -5,12 +5,48 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag 'application.tailwind', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
-    <%= yield %>
+  <body class="bg-gray-900 text-white min-h-screen flex flex-col">
+    <% if Current.user %>
+      <nav class="bg-gray-800/80 backdrop-blur-sm border-b border-cyan-500/30 px-6 py-3 fixed top-0 left-0 right-0 z-40">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+          <div class="flex items-center space-x-6">
+            <%= link_to root_path, class: "text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition" do %>
+              <i class="fa fa-parking"></i> PARKING
+            <% end %>
+            <% if Current.user.admin? %>
+              <%= link_to admin_users_path, class: "bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 px-3 py-1.5 rounded-lg text-sm font-medium transition" do %>
+                <i class="fa fa-users"></i> Usuarios
+              <% end %>
+            <% end %>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="text-gray-400 text-sm">
+              <i class="fa fa-user"></i> <%= Current.user.email_address %>
+              <% if Current.user.admin? %>
+                <span class="ml-1 bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded text-xs">Admin</span>
+              <% end %>
+            </span>
+            <%= button_to session_path, method: :delete, class: "bg-red-500/20 text-red-300 hover:bg-red-500/30 px-3 py-1.5 rounded-lg text-sm font-medium transition" do %>
+              <i class="fa fa-sign-out-alt"></i> Salir
+            <% end %>
+          </div>
+        </div>
+      </nav>
+      <div class="pt-16 flex items-center justify-center flex-1">
+        <%= yield %>
+      </div>
+    <% else %>
+      <div class="flex items-center justify-center flex-1">
+        <%= yield %>
+      </div>
+    <% end %>
   </body>
 </html>

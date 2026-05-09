@@ -1,0 +1,23 @@
+AllCops:
+  Exclude:
+    - 'bin/bundle'
+    - 'db/schema.rb'
+    - 'db/migrate/**'
+    - 'vendor/**'
+    - 'app/assets/**'
+    - 'node_modules/**'
+    - 'app/services/**'
+  DisabledByDefault: true
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 25
+
+Metrics/BlockLength:
+  Exclude:
+    - 'db/schema.rb'
+
+Layout/LineLength:
+  Max: 150

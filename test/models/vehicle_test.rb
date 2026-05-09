@@ -10,8 +10,6 @@ end
 
 # frozen_string_literal: true
 
-require 'test_helper'
-
 class VehicleTest < ActiveSupport::TestCase
   def setup
     @vehicle = Vehicle.new(entry_time: Time.now)

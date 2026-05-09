@@ -5,7 +5,7 @@ class Vehicle < ApplicationRecord
   enum :vehicle_type, { Motocicleta: 0, Carro: 1, Bicicleta: 2 }
   belongs_to :user
 
-  validates :plate_number, presence: true
+  validates :plate_number, presence: true, format: { with: /\A[A-Z0-9]{3,7}\z/i, message: 'Formato inválido (ej: ABC123 o ABC-123)' }
   validates :vehicle_type, presence: true
 
   def total_time

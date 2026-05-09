@@ -39,6 +39,38 @@ class VehiclesController < ApplicationController
     end
   end
 
+  def edit
+    @vehicle = Vehicle.find(params[:id])
+    unless @vehicle.user == Current.user || Current.user.admin?
+      redirect_to root_path, alert: 'No tienes permiso para editar este vehículo.'
+    end
+  end
+
+  def update
+    @vehicle = Vehicle.find(params[:id])
+    unless @vehicle.user == Current.user || Current.user.admin?
+      redirect_to root_path, alert: 'No tienes permiso para editar este vehículo.'
+      return
+    end
+
+    if @vehicle.update(vehicle_params)
+      redirect_to root_path, notice: 'Vehículo actualizado correctamente.'
+    else
+      render :edit
+    end
+  end
+
+  def destroy
+    @vehicle = Vehicle.find(params[:id])
+    unless @vehicle.user == Current.user || Current.user.admin?
+      redirect_to root_path, alert: 'No tienes permiso para eliminar este vehículo.'
+      return
+    end
+
+    @vehicle.destroy
+    redirect_to root_path, notice: 'Vehículo eliminado correctamente.'
+  end
+
   def exit
     @vehicle = Current.user.vehicles.find_by(id: params[:id])
 
@@ -54,6 +86,8 @@ class VehiclesController < ApplicationController
   end
 
   def records_by_user
+    return redirect_to root_path, alert: 'Acceso denegado' unless Current.user.admin?
+
     @vehicles = if params[:search].present?
                   Current.user.vehicles.where('plate_number LIKE ? OR vehicle_type LIKE ?',
                                               "%#{params[:search]}%", "%#{params[:search]}%")
@@ -61,6 +95,22 @@ class VehiclesController < ApplicationController
                 else
                   Current.user.vehicles.order(created_at: :desc)
                 end
+  end
+
+  def export_pdf
+    return redirect_to root_path, alert: 'Acceso denegado' unless Current.user.admin?
+
+    vehicles = if params[:plate_number].present?
+                 Vehicle.where('plate_number LIKE ?', "%#{params[:plate_number]}%").order(created_at: :desc)
+               else
+                 Vehicle.order(created_at: :desc).limit(100)
+               end
+
+    pdf = PdfGeneratorService.new(vehicles).generate
+    timestamp = Time.current.strftime('%Y%m%d_%H%M%S')
+
+    send_data pdf, filename: "parking_vehiculos_#{timestamp}.pdf",
+                  type: 'application/pdf', disposition: 'attachment'
   end
 
   private
